@@ -8,5 +8,8 @@ namespace InvoiceManagementPortal.Models
         {
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<ServiceCategory> Services { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<ServicePlans> ServicePlans { get; set; }
     }
 }

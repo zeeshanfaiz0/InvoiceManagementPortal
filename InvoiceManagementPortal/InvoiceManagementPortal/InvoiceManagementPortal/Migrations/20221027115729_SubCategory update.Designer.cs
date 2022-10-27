@@ -3,6 +3,7 @@ using InvoiceManagementPortal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceManagementPortal.Migrations
 {
     [DbContext(typeof(InvoiceDbContext))]
-    partial class InvoiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221027115729_SubCategory update")]
+    partial class SubCategoryupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,23 +22,6 @@ namespace InvoiceManagementPortal.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("InvoiceManagementPortal.Models.PlansType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Plan")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PlansType");
-                });
 
             modelBuilder.Entity("InvoiceManagementPortal.Models.ServiceCategory", b =>
                 {
@@ -70,18 +55,16 @@ namespace InvoiceManagementPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Plan")
-                        .HasColumnType("int");
-
                     b.Property<int>("Revisions")
                         .HasColumnType("int");
 
                     b.Property<int>("Title")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.HasIndex("Plan");
+                    b.HasKey("id");
 
                     b.HasIndex("Title");
 
@@ -144,12 +127,6 @@ namespace InvoiceManagementPortal.Migrations
 
             modelBuilder.Entity("InvoiceManagementPortal.Models.ServicePlans", b =>
                 {
-                    b.HasOne("InvoiceManagementPortal.Models.PlansType", "Type")
-                        .WithMany()
-                        .HasForeignKey("Plan")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("InvoiceManagementPortal.Models.SubCategory", "SubCat")
                         .WithMany()
                         .HasForeignKey("Title")
@@ -157,8 +134,6 @@ namespace InvoiceManagementPortal.Migrations
                         .IsRequired();
 
                     b.Navigation("SubCat");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("InvoiceManagementPortal.Models.SubCategory", b =>

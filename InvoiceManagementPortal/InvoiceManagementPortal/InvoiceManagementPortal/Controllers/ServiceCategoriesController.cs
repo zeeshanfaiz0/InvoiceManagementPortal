@@ -6,92 +6,88 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InvoiceManagementPortal.Models;
-using InvoiceManagementPortal.Utils.CryptoService;
 
 namespace InvoiceManagementPortal.Controllers
 {
-    public class UsersController : Controller
+    public class ServiceCategoriesController : Controller
     {
         private readonly InvoiceDbContext _context;
-        private readonly ICryptoService crypto;
 
-        public UsersController(InvoiceDbContext context, ICryptoService service)
+        public ServiceCategoriesController(InvoiceDbContext context)
         {
             _context = context;
-            this.crypto = service;
         }
 
-        // GET: Users
+        // GET: ServiceCategories
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Users.ToListAsync());
+              return View(await _context.Services.ToListAsync());
         }
 
-        // GET: Users/Details/5
+        // GET: ServiceCategories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Services == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
+            var serviceCategory = await _context.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (serviceCategory == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(serviceCategory);
         }
 
-        // GET: Users/Create
+        // GET: ServiceCategories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
+        // POST: ServiceCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Password,Type")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Title")] ServiceCategory serviceCategory)
         {
             if (ModelState.IsValid)
             {
-                user.Password = this.crypto.ComputePassword(user.Email.ToUpperInvariant(), user.Password);
-                _context.Add(user);
+                _context.Add(serviceCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(serviceCategory);
         }
 
-        // GET: Users/Edit/5
+        // GET: ServiceCategories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Services == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var serviceCategory = await _context.Services.FindAsync(id);
+            if (serviceCategory == null)
             {
                 return NotFound();
             }
-            return View(user);
+            return View(serviceCategory);
         }
 
-        // POST: Users/Edit/5
+        // POST: ServiceCategories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Password,Type")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] ServiceCategory serviceCategory)
         {
-            if (id != user.Id)
+            if (id != serviceCategory.Id)
             {
                 return NotFound();
             }
@@ -100,13 +96,12 @@ namespace InvoiceManagementPortal.Controllers
             {
                 try
                 {
-                    user.Password = this.crypto.ComputePassword(user.Email.ToUpperInvariant(), user.Password);
-                    _context.Update(user);
+                    _context.Update(serviceCategory);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!ServiceCategoryExists(serviceCategory.Id))
                     {
                         return NotFound();
                     }
@@ -117,49 +112,49 @@ namespace InvoiceManagementPortal.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(serviceCategory);
         }
 
-        // GET: Users/Delete/5
+        // GET: ServiceCategories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Services == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
+            var serviceCategory = await _context.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (serviceCategory == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(serviceCategory);
         }
 
-        // POST: Users/Delete/5
+        // POST: ServiceCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Users == null)
+            if (_context.Services == null)
             {
-                return Problem("Entity set 'InvoiceDbContext.Users'  is null.");
+                return Problem("Entity set 'InvoiceDbContext.Services'  is null.");
             }
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
+            var serviceCategory = await _context.Services.FindAsync(id);
+            if (serviceCategory != null)
             {
-                _context.Users.Remove(user);
+                _context.Services.Remove(serviceCategory);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool ServiceCategoryExists(int id)
         {
-          return _context.Users.Any(e => e.Id == id);
+          return _context.Services.Any(e => e.Id == id);
         }
     }
 }

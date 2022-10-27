@@ -1,4 +1,5 @@
 using InvoiceManagementPortal.Models;
+using InvoiceManagementPortal.Utils.CryptoService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddControllersWithViews();
 
 // DI for db Context
 builder.Services.AddDbContext<InvoiceDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+
+// Registering Services
+builder.Services.AddScoped<ICryptoService, CryptoService>();
 
 var app = builder.Build();
 
